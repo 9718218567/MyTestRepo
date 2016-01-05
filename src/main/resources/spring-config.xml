@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- © Copyright 2015, Dell, Inc. All Rights Reserved. -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:amq="http://activemq.apache.org/schema/core" xmlns:jms="http://www.springframework.org/schema/jms"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:oxm="http://www.springframework.org/schema/oxm" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:mongo="http://www.springframework.org/schema/data/mongo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/context
+	http://www.springframework.org/schema/context/spring-context.xsd
+	http://www.springframework.org/schema/tx
+	http://www.springframework.org/schema/tx/spring-tx.xsd
+	http://www.springframework.org/schema/aop
+	http://www.springframework.org/schema/aop/spring-aop.xsd
+	http://www.springframework.org/schema/data/mongo 
+	http://www.springframework.org/schema/data/mongo/spring-mongo.xsd 
+	http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core.xsd 
+	http://www.springframework.org/schema/jms http://www.springframework.org/schema/jms/spring-jms.xsd 
+	http://www.springframework.org/schema/oxm http://www.springframework.org/schema/oxm/spring-oxm.xsd">
+
+	<context:property-placeholder
+		location="classpath:mongodb.properties, application.properties" />
+
+	<mongo:mongo host="localhost" port="${mongodb.port}" id="mongo" />
+
+	 <mongo:db-factory dbname="${mongodb.db}" mongo-ref="mongo"
+		authentication-dbname="${mongodb.db}" password="${mongodb.password}"
+		username="${mongodb.username}" id="mongoDbFactory" /> 
+
+	<bean id="mongoTypeMapper"
+		class="org.springframework.data.mongodb.core.convert.DefaultMongoTypeMapper">
+		<constructor-arg name="typeKey">
+			<null />
+		</constructor-arg>
+	</bean>
+
+	<bean id="mongoMappingContext"
+		class="org.springframework.data.mongodb.core.mapping.MongoMappingContext" />
+
+	<bean id="mongoConverter"
+		class="org.springframework.data.mongodb.core.convert.MappingMongoConverter">
+		<constructor-arg name="mongoDbFactory" ref="mongoDbFactory" />
+		<constructor-arg name="mappingContext" ref="mongoMappingContext" />
+		<property name="typeMapper" ref="mongoTypeMapper"></property>
+		<property name="mapKeyDotReplacement" value="\+" />
+	</bean>
+
+	<bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
+		<constructor-arg name="mongoDbFactory" ref="mongoDbFactory" />
+		<constructor-arg name="mongoConverter" ref="mongoConverter" />
+		<property name="writeResultChecking" value="EXCEPTION" />
+	</bean>
+
+	<mongo:repositories base-package="com.dell.iot.dao"
+		mongo-template-ref="mongoTemplate" />
+</beans> 

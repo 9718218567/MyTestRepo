@@ -1,0 +1,19 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "title": "Service Mapping For POST",
+    "description": "Service Mapping Entry For POST Operation",
+    "type": "object",
+    "properties": {
+        "serviceName": {
+            "description": "Name of the service.",
+            "type": "string",
+            "minLength":1
+        },
+        "serviceUrl": {
+            "description": "URL of the Service, on which the service will run.",
+            "type": "string",
+            "minLength":1
+        }
+    },
+    "required": ["serviceName", "serviceUrl"]
+}

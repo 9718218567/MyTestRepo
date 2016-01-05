@@ -1,0 +1,24 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "title": "Service Mapping For PUT",
+    "description": "Service Mapping Entry For PUT Operation",
+    "type": "object",
+    "properties": {
+    	"id": {
+            "description": "Id of the existing object.",
+            "type": "string",
+            "minLength":1
+        },
+        "serviceName": {
+            "description": "Name of the service.",
+            "type": "string",
+            "minLength":1
+        },
+        "serviceUrl": {
+            "description": "URL of the Service, on which the service will run.",
+            "type": "string",
+            "minLength":1
+        }
+    },
+    "required": ["id", "serviceName", "serviceUrl"]
+}
